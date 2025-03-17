@@ -1,36 +1,61 @@
-import { fetchData } from "./handleFetch";
+import { fetchData } from "./handleFetch"; // Import your fetch helper
 
-const lastFmAPIKey = "3000ac0e07306f0a193f35ecd07ff549";
+const clientId = "1504ea323a934f8abf107c92e7481eea";
+const clientSecret = "403d8c5aa33045889c6b425434c1cefa";
 
-export const getSongByMood = async (mood) => {
-  // Fetch data using fetchData helper
-  const [response, error] = await fetchData(
-    `https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${mood}&api_key=${lastFmAPIKey}&format=json`
-  );
+// Convert client credentials to Base64 (required for Spotify authentication)
+const encodedCredentials = btoa(`${clientId}:${clientSecret}`);
 
-  // Error handling
-  if (error) {
-    console.error("Error fetching the tracks based on mood tag", error);
-    return [];
+export const fetchSpotifyTracks = async (searchTerm) => {
+  if (!searchTerm) {
+    console.error("Error: No search term provided.");
+    return null;
   }
 
-  // Check if responseData contains expected data
-  if (!response.tracks || !response.tracks.track) {
-    console.error("Invalid response format:", response);
-    return [];
+  // Step 1: Get Spotify Access Token (Ensuring Proper POST Request)
+  const tokenUrl = "https://accounts.spotify.com/api/token";
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Basic ${encodedCredentials}`,
+    },
+    body: "grant_type=client_credentials",
+  };
+
+  const [authData, authError] = await fetchData(tokenUrl, requestOptions);
+
+  if (authError || !authData?.access_token) {
+    console.error("Error fetching Spotify access token:", authError);
+    return null;
   }
 
-  // Extract top 3 songs safely
-  const topTracksBasedOnMood = response.tracks.track
-    .slice(0, Math.min(3, response.tracks.track.length)) // Get only available tracks
-    .map((track) => ({
-      title: track.name,
-      artist: track.artist.name,
-      url: track.url,
-      listeners: track.listeners,
-      image: track.image.length > 0 ? track.image[1]["#text"] : null, // Use the "large" image
-    }));
+  const accessToken = authData.access_token;
 
-  console.log(topTracksBasedOnMood);
-  return topTracksBasedOnMood;
+  // Step 2: Search for the top 10 tracks on Spotify
+  const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+    searchTerm
+  )}&type=track&limit=10`;
+  const [data, error] = await fetchData(searchUrl, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (error || !data?.tracks?.items?.length) {
+    console.error(`Error fetching Spotify tracks for ${searchTerm}:`, error);
+    return null;
+  }
+
+  // Extract relevant data for the top 10 results
+  return data.tracks.items.map((track) => ({
+    title: track.name,
+    artist: track.artists[0].name,
+    preview: track.preview_url, // 30-sec preview URL
+    image:
+      track.album.images[2]?.url ||
+      track.album.images[1]?.url ||
+      track.album.images[0]?.url, // Smallest available image
+    url: track.external_urls.spotify, // Spotify song link
+  }));
 };
+
+export default fetchSpotifyTracks;
