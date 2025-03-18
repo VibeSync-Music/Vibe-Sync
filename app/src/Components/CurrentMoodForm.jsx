@@ -2,33 +2,32 @@ import { useState } from "react";
 import { moodToKeyword, emojiMap } from "../moodToGenre";
 
 const CurrentMoodForm = ({ setMood }) => {
-  // takes setter function prop that updates the state of mood's value in app.jsx
   const [moodValue, setMoodValue] = useState("");
 
-  // every time a radio button is checked we'll call this fiunction to update the state of mood within the scope of CurrentMoodForm component
   const handleChange = (event) => {
+    console.log(event.target.value);
     setMoodValue(event.target.value);
   };
 
-  // whenever we submit the form we update the value of mood using the setter function we took as a prop in app.jsx
   const handleSubmit = (event) => {
     event.preventDefault();
     if (moodValue) {
-      setMood(moodValue); // Update the parent state
+      setMood(moodValue); // Update parent state in App.jsx
+      setMoodValue(""); // ✅ Reset the form after submission
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset>
+    <form onSubmit={handleSubmit} aria-label="Mood selection form">
+      <fieldset role="radiogroup">
         <legend>Select Your Mood:</legend>
 
         {Object.keys(moodToKeyword).map((mood) => (
-          <label key={mood}>
+          <label key={mood} style={{ display: "block", margin: "5px 0" }}>
             <input
               type="radio"
               name="mood"
-              value={moodToKeyword.mood}
+              value={mood}
               checked={moodValue === mood}
               onChange={handleChange}
             />

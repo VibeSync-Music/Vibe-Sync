@@ -12,7 +12,7 @@ const encodedCredentials = btoa(`${clientId}:${clientSecret}`);
 const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
 const deezerApiUrl = `${CORS_PROXY}https://api.deezer.com/search?q=`;
 
-const fetchTracksWithDeezerPreviews = async (searchTerm) => {
+export const fetchTracksWithDeezerPreviews = async (searchTerm) => {
   if (!searchTerm) {
     console.error("Error: No search term provided.");
     return null;
@@ -57,6 +57,7 @@ const fetchTracksWithDeezerPreviews = async (searchTerm) => {
       const deezerSearchUrl = `${deezerApiUrl}${encodeURIComponent(
         track.name
       )} ${encodeURIComponent(track.artists[0].name)}`;
+
       const [deezerData, deezerError] = await fetchData(deezerSearchUrl);
 
       return {
@@ -77,5 +78,3 @@ const fetchTracksWithDeezerPreviews = async (searchTerm) => {
 
   return filteredTracks.length > 0 ? filteredTracks : null;
 };
-
-export default fetchTracksWithDeezerPreviews;

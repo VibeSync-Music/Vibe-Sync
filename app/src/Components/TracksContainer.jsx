@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import fetchTracksWithDeezerPreviews from "../adapters/moodAdapter"; // Import function
+import { fetchTracksWithDeezerPreviews } from "../adapters/moodAdapter";
 
 const TracksContainer = ({ mood }) => {
   const [tracks, setTracks] = useState([]);
