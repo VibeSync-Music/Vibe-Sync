@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import fetchSpotifyTracks from "../adapters/moodAdapter"; // Import the function
+import fetchTracksWithDeezerPreviews from "../adapters/moodAdapter"; // Import function
 
 const TracksContainer = ({ mood }) => {
   const [tracks, setTracks] = useState([]);
@@ -7,15 +7,15 @@ const TracksContainer = ({ mood }) => {
 
   useEffect(() => {
     const fetchTracksByMood = async () => {
-      setError(""); // Reset errors
-      setTracks([]); // Clear previous tracks
+      setError("");
+      setTracks([]);
 
       try {
-        const result = await fetchSpotifyTracks(mood);
+        const result = await fetchTracksWithDeezerPreviews(mood);
         if (result && result.length > 0) {
           setTracks(result);
         } else {
-          setError("No songs found for this mood.");
+          setError("No songs with previews found for this mood.");
         }
       } catch (err) {
         setError("Error fetching tracks. Please try again later.");
@@ -31,7 +31,9 @@ const TracksContainer = ({ mood }) => {
 
   return (
     <div>
-      <h3>🎵 Top 10 Songs for "{mood}"</h3>
+      <h3>🎵 Top Songs for "{mood}"</h3>
+      {tracks.length === 0 ? <p>No previews available.</p> : null}
+
       <ul>
         {tracks.map((track, index) => (
           <li key={index}>
