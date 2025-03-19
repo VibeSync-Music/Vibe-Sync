@@ -1,30 +1,25 @@
 import { fetchData } from "./handleFetch"; // Import your fetch helper
 
-// Spotify API Authorization
-const clientId = "1504ea323a934f8abf107c92e7481eea";
-const clientSecret = "403d8c5aa33045889c6b425434c1cefa";
+// Use your own self-hosted proxy for Deezer (instead of `cors-anywhere`)
+const LOCAL_PROXY = "http://localhost:5000/deezer/";
 
-// Convert client credentials to Base64 (required for Spotify authentication)
-const encodedCredentials = btoa(`${clientId}:${clientSecret}`);
-/* Base64 is a format that is safe for transmission over text based protocols (like HTTP) */
+// Store Spotify token in memory to avoid unnecessary API calls
+let spotifyAccessToken = null;
 
-// Deezer CORS Proxy
-const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-const deezerApiUrl = `${CORS_PROXY}https://api.deezer.com/search?q=`;
+// Function to get a new Spotify Access Token (Only fetch when needed)
+const getSpotifyAccessToken = async () => {
+  if (spotifyAccessToken) return spotifyAccessToken; // ✅ Use stored token if available
 
-export const fetchTracksWithDeezerPreviews = async (searchTerm) => {
-  if (!searchTerm) {
-    console.error("Error: No search term provided.");
-    return null;
-  }
+  // Spotify API Authorization
+  const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+  const SPOTIFY_CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
 
-  // Step 1: Get Spotify Access Token
   const tokenUrl = "https://accounts.spotify.com/api/token";
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: `Basic ${encodedCredentials}`,
+      Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
     },
     body: "grant_type=client_credentials",
   };
@@ -36,9 +31,15 @@ export const fetchTracksWithDeezerPreviews = async (searchTerm) => {
     return null;
   }
 
-  const accessToken = authData.access_token;
+  spotifyAccessToken = authData.access_token; // Store token for reuse
+  return spotifyAccessToken;
+};
 
-  // Step 2: Fetch Top 10 Tracks from Spotify
+// Fetch tracks from Spotify
+const fetchSpotifyTracks = async (searchTerm) => {
+  const accessToken = await getSpotifyAccessToken();
+  if (!accessToken) return [];
+
   const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
     searchTerm
   )}&type=track&limit=10`;
@@ -48,33 +49,63 @@ export const fetchTracksWithDeezerPreviews = async (searchTerm) => {
 
   if (error || !data?.tracks?.items?.length) {
     console.error(`Error fetching Spotify tracks for ${searchTerm}:`, error);
+    return [];
+  }
+
+  return data.tracks.items.map((track) => ({
+    title: track.name,
+    artist: track.artists[0].name,
+    preview: track.preview_url, //  Use Spotify preview if available
+    image: track.album.images[1]?.url || track.album.images[0]?.url,
+    url: track.external_urls.spotify,
+  }));
+};
+
+//  Fetch Deezer preview (using your own local proxy instead of cors-anywhere)
+const fetchDeezerPreview = async (trackName, artistName) => {
+  const query = encodeURIComponent(`${trackName} ${artistName}`);
+  const url = `${LOCAL_PROXY}${query}`;
+
+  const [deezerData, deezerError] = await fetchData(url);
+
+  if (deezerError || !deezerData?.data?.length) {
+    console.warn(
+      `No preview found on Deezer for: ${trackName} - ${artistName}`
+    );
     return null;
   }
 
-  // Step 3: Try to get previews from Deezer
-  const tracks = await Promise.all(
-    data.tracks.items.map(async (track) => {
-      const deezerSearchUrl = `${deezerApiUrl}${encodeURIComponent(
-        track.name
-      )} ${encodeURIComponent(track.artists[0].name)}`;
+  return deezerData.data[0]?.preview || null;
+};
 
-      const [deezerData, deezerError] = await fetchData(deezerSearchUrl);
+//  Main function: Fetch Spotify tracks & get Deezer previews if needed
+export const fetchTracksWithDeezerPreviews = async (searchTerm) => {
+  if (!searchTerm) {
+    console.error("Error: No search term provided.");
+    return [];
+  }
 
-      return {
-        title: track.name,
-        artist: track.artists[0].name,
-        preview: deezerData?.data?.[0]?.preview || null, // ✅ Use Deezer preview if available
-        image:
-          track.album.images[2]?.url ||
-          track.album.images[1]?.url ||
-          track.album.images[0]?.url,
-        url: track.external_urls.spotify,
-      };
-    })
+  // Step 1: Fetch tracks from Spotify
+  const spotifyTracks = await fetchSpotifyTracks(searchTerm);
+
+  //  Step 2: Get only tracks that need previews from Deezer (batch instead of individual calls)
+  const tracksNeedingPreviews = spotifyTracks.filter((track) => !track.preview);
+  const deezerPreviews = await Promise.all(
+    tracksNeedingPreviews.map(async (track) => ({
+      ...track,
+      preview: await fetchDeezerPreview(track.title, track.artist),
+    }))
   );
 
-  // Remove songs without previews
-  const filteredTracks = tracks.filter((track) => track.preview);
+  //  Step 3: Merge updated Deezer previews back into the original track list
+  const finalTracks = spotifyTracks.map((track) => {
+    const deezerTrack = deezerPreviews.find(
+      (dTrack) => dTrack.title === track.title
+    );
+    return deezerTrack?.preview
+      ? { ...track, preview: deezerTrack.preview }
+      : track;
+  });
 
-  return filteredTracks.length > 0 ? filteredTracks : null;
+  return finalTracks.filter((track) => track.preview); // ✅ Only return tracks that have previews
 };

@@ -1,42 +1,31 @@
 import { useState } from "react";
-import { moodToKeyword, emojiMap } from "../moodToGenre";
 
 const CurrentMoodForm = ({ setMood }) => {
-  const [moodValue, setMoodValue] = useState("");
+  const [moodInput, setMoodInput] = useState("");
 
   const handleChange = (event) => {
-    console.log(event.target.value);
-    setMoodValue(event.target.value);
+    setMoodInput(event.target.value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (moodValue) {
-      setMood(moodValue); // Update parent state in App.jsx
-      setMoodValue(""); // ✅ Reset the form after submission
+    if (moodInput) {
+      setMood(moodInput); // Pass the user's mood input to the parent (App.jsx)
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} aria-label="Mood selection form">
-      <fieldset role="radiogroup">
-        <legend>Select Your Mood:</legend>
-
-        {Object.keys(moodToKeyword).map((mood) => (
-          <label key={mood} style={{ display: "block", margin: "5px 0" }}>
-            <input
-              type="radio"
-              name="mood"
-              value={mood}
-              checked={moodValue === mood}
-              onChange={handleChange}
-            />
-            {emojiMap[mood]} {mood.charAt(0).toUpperCase() + mood.slice(1)}
-          </label>
-        ))}
-
-        <button type="submit" disabled={!moodValue}>
-          Submit
+    <form onSubmit={handleSubmit}>
+      <fieldset>
+        <legend>How do you feel?</legend>
+        <input
+          type="text"
+          value={moodInput}
+          onChange={handleChange}
+          placeholder="Type your mood (e.g., 'Feeling nostalgic about summer')"
+        />
+        <button type="submit" disabled={!moodInput}>
+          🎵 Get Songs
         </button>
       </fieldset>
     </form>
