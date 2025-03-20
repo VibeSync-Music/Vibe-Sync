@@ -58,9 +58,14 @@ const TracksContainer = ({ mood }) => {
             <p>
               {track.title} - {track.artist}
             </p>
-            <img src={track.image} alt={track.title} />
+            <img src={track.image} alt={`Album cover for ${track.title}`} />
+
+            {/* ✅ Replaces button with an audio player */}
             {track.preview ? (
-              <button onClick={() => handlePlayTrack(track)}>▶️ Play</button>
+              <audio controls>
+                <source src={track.preview} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
             ) : (
               <p>🚫 No preview available</p>
             )}
