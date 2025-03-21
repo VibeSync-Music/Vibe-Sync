@@ -59,6 +59,27 @@ h3 {
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Navigation bar wrapper */
+.navbar {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.2rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Container for brand + links */
+.navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Brand logo and title */
 .brand-logo {
   display: flex;
   align-items: center;
@@ -66,37 +87,36 @@ h3 {
 }
 
 .logo-icon {
-  width: 28px;
-  height: 28px;
-  filter: drop-shadow(0 0 6px var(--accent));
-}
-
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 1px;
+  width: 40px;
+  height: 40px;
 }
 
 .gradient-logo {
+  font-size: 1.8rem;
+  font-weight: bold;
   background: linear-gradient(90deg, #18f7f7, #a78bfa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 700;
-  font-size: 1.8rem;
-  letter-spacing: 1.2px;
+}
+
+/* Navigation links */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
 }
 
 .nav-links a {
-  color: var(--text);
   text-decoration: none;
-  margin-left: 2rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--text);
   transition: 0.3s ease;
 }
 
-.nav-links a:hover {
-  color: var(--accent);
+.nav-links a:hover,
+.nav-links a.active {
+  color: #a78bfa;
+  border-bottom: 2px solid #a78bfa;
 }
 
 /*Form styling*/
@@ -260,22 +280,52 @@ h3 {
 }
 
 /* Save Button */
-.track-card button {
+.save-button {
   margin-top: 0.75rem;
-  padding: 0.55rem 1.25rem;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #a78bfa, #18f7f7);
+  background: linear-gradient(135deg, #18f7f7, #a78bfa);
   color: #000;
   font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.3s ease;
-  font-size: 0.95rem;
+  transition: all 0.25s ease;
 }
 
-.track-card button:hover {
+.save-button:hover {
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 0 12px rgba(24, 247, 247, 0.25);
+}
+
+.track-saved-msg {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #a78bfa;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  display: inline-block;
+  animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 
 /* === Shimmer Animation Base when loading */

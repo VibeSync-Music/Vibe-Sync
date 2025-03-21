@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
 import { analyzeMoodWithAI } from "../adapters/aiMoodAnalyzer";
 import { fetchTracksWithDeezerPreviews } from "../adapters/moodAdapter";
-import { getSongs, addSong } from "../adapters/localStorage";
+import { addSong } from "../adapters/localStorage";
 
 const TracksContainer = ({ mood }) => {
   const [tracks, setTracks] = useState([]);
   const [error, setError] = useState("");
+  const [savedTrackId, setSavedTrackId] = useState(null);
+
+  const handleSave = (track, index) => {
+    addSong(track);
+    setSavedTrackId(index);
+    setTimeout(() => setSavedTrackId(null), 2000); // reset message
+  };
 
   useEffect(() => {
     const fetchSongsByMood = async () => {
@@ -14,14 +21,12 @@ const TracksContainer = ({ mood }) => {
       setTracks([]);
 
       try {
-        // ✅ Step 1: AI analyzes mood and suggests genres
         const genres = await analyzeMoodWithAI(mood);
         if (!genres.length) {
           setError("AI couldn't understand the mood. Try again.");
           return;
         }
 
-        // ✅ Step 2: Fetch songs based on AI’s generated genres
         const songs = await fetchTracksWithDeezerPreviews(genres.join(" "));
         if (!songs || songs.length === 0) {
           setError("No songs found for this mood.");
@@ -68,6 +73,7 @@ const TracksContainer = ({ mood }) => {
               {track.title}
               <span className="track-artist"> — {track.artist}</span>
             </p>
+
             {track.preview ? (
               <audio controls className="track-audio">
                 <source src={track.preview} type="audio/mpeg" />
@@ -80,7 +86,17 @@ const TracksContainer = ({ mood }) => {
             <a href={track.url} target="_blank" rel="noopener noreferrer">
               Listen on Spotify
             </a>
-            <button onClick={() => addSong(track)}>Save</button>
+
+            <button
+              onClick={() => handleSave(track, index)}
+              className="save-button"
+            >
+              Save
+            </button>
+
+            {savedTrackId === index && (
+              <p className="track-saved-msg">💾 Saved!</p>
+            )}
           </li>
         ))}
       </ul>
