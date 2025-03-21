@@ -1,29 +1,37 @@
-# VibeSync 🎧🔥</h1>
+# **VibeSync 🎧🔥**
 
-Created by Juan Felipe Garcia, and Luis Abreu.
-
----
-
-### 🚀 Mission Statement
-
-VibeSync is a mood-based music recommendation app designed to help users discover songs that match their emotions and vibes. Whether you’re feeling happy, sad, chill, or energetic, VibeSync curates a personalized list of music using data from Last.fm and Deezer APIs. Users can select their mood and instantly receive music recommendations that resonate with how they feel.
+**Created by Juan Felipe Garcia & Luis Abreu**
 
 ---
 
-### 🛠️ API & React Router
+## 🚀 **Mission Statement**
 
-This application uses the Last.fm API and Deezer API for fetching song recommendations based on mood. Below are the documentation links, specific API endpoints, and the frontend pages that will interact with them.
+VibeSync is a **mood-driven music discovery app** that uses AI and APIs to **curate a playlist** that matches the user’s mood state. Whether the user feels like **coding at a cafe, becoming a mariachi, going all out in a rave, or going to a zumba class**, users can **input their mood** and instantly receive **a personalized playlist** of songs.
 
----
-
-### 📜 API Documentation
-
-- **Last.fm API Docs:** [https://www.last.fm/api/](https://www.last.fm/api/)
-- **Deezer API Docs:** [https://developers.deezer.com/](https://developers.deezer.com/)
+We utilize **AI-powered mood analysis**, along with the **Last.fm and Deezer APIs**, to fetch music recommendations. Users can **listen to previews**, explore song details, and **discover new music effortlessly**.
 
 ---
 
-## 🔗 API Endpoints
+## 🛠️ **Technology Stack**
+
+- **Frontend**: React (Vite) + React Router
+- **APIs**: OpenAI (for AI mood analysis), Last.fm, Deezer, Spotify
+- **Proxy Server**: Node.js + Express (for handling Deezer CORS restrictions)
+
+---
+
+## 📜 **APIs & Documentation**
+
+| **API**     | **Purpose**                                         | **Documentation**                                                   |
+| ----------- | --------------------------------------------------- | ------------------------------------------------------------------- |
+| **Last.fm** | Fetches top songs based on mood tags                | [Last.fm API](https://www.last.fm/api/)                             |
+| **Deezer**  | Fetches tracks & song previews                      | [Deezer API](https://developers.deezer.com/)                        |
+| **Spotify** | Provides song metadata & album covers               | [Spotify API](https://developer.spotify.com/documentation/web-api/) |
+| **OpenAI**  | AI-powered mood analysis for better recommendations | [OpenAI API](https://platform.openai.com/)                          |
+
+---
+
+## 🔗 **API Endpoints Used**
 
 ### **1️⃣ Last.fm: Get Top Songs by Mood**
 
@@ -33,92 +41,85 @@ This application uses the Last.fm API and Deezer API for fetching song recommend
 https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag={mood}&api_key={API_KEY}&format=json
 ```
 
-Description: Fetches the top songs that match the selected mood.
-Data Used: track.name, track.artist.name, track.url
+**Description:** Fetches the top songs that match the selected mood.
+**Data Used:** track.name, track.artist.name, track.url.
 
-### **2️⃣ Deezer: Search for Tracks**
+## 2️⃣ Deezer: Search for Tracks
 
-**Endpoint:**
+Endpoint:
 
 ```sh
 https://api.deezer.com/search?q={mood}
 ```
 
-Description: Returns a list of tracks that match the mood keyword.
-Data Used: data.title, data.artist.name, data.preview
+**Description:** Returns a list of tracks based on mood.
+**Data Used:** data.title, data.artist.name, data.preview, data.album.cover.
 
-### **3️⃣ Deezer: Get Song Preview**
+## 3️⃣ Deezer: Get Song Preview
 
-Endpoint:
+**Endpoint:**
 
 ```sh
 https://api.deezer.com/track/{id}
 ```
 
-Description: Fetches details and a 30-second song preview for a track.
-Data Used: title, artist.name, preview, album.cover
+**Description:** Fetches details & 30-sec song preview for a track.
+**Data Used:** title, artist.name, preview, album.cover.
 
-**Note:** The Last.fm API requires an API key for authentication.
+## 4️⃣ OpenAI: AI-Powered Mood Analysis
 
-### 👩‍💻 MVP User Stories & Frontend Routes
+**Endpoint:**
 
-The application will include the following core features and frontend routes:
+```sh
+https://api.openai.com/v1/completions
+```
 
-**🔹 Pages & Features**
+**Description:** Uses AI to analyze a user's mood input and suggests music genres.
+**Data Used:** AI-generated list of mood keywords.
 
-- Homepage (/) – Users can select their mood from a dropdown list.
-- Results Page (/results) – Displays recommended songs based on the selected mood.
-- Song Details Page (/song/:id) – Shows details of a song and provides a 30-second preview.
+## 👩‍💻 MVP User Stories & Frontend Routes
 
----
+The application will include the following core features and routes:
 
-**Example User Flow**
+**Feature Description**
 
-- 1️⃣ A user visits / and selects a mood (e.g., "Happy").
-- 2️⃣ The app fetches matching songs and redirects to /results, displaying a list of recommended tracks.
-- 3️⃣ Clicking on a song redirects to /song/:id, showing more details and a playable preview.
+- Homepage (/) Users submits a mood using a form
+- AI Mood Analysis AI analyzes the user's mood and suggests genres
+- Results Page (/results) Displays top recommended songs & previews
+- Song Details Page (/song/:id) Provides more details + embedded audio preview
+- Mood-based Playlists Users can browse curated mood-based playlists
 
----
+## 💡 Example User Flow
 
-### 🤔 Stretch User Stories
+- 1️⃣ User enters a mood (e.g., "Codig late at night") on the homepage.
+- 2️⃣ AI analyzes the mood and finds matching genres.
+- 3️⃣ The app fetches songs from Last.fm, Deezer, and Spotify APIs.
+- 4️⃣ The results page (/results) displays a playlist of matching songs.
+- 5️⃣ Clicking a song redirects to /song/:id, where users can listen to a 30-sec preview and view details.
 
-If time permits, we will add the following extra features:
+## 🤔 Stretch Goals & Extra Features
 
-- Allow users to favorite songs and save them for later.
+🚀 If time permits, we plan to expand VibeSync with additional features:
 
-- Enable dark mode & light mode switching for a better user experience.
+**Feature Description**
 
-- Integrate AI-powered mood detection using sentiment analysis (future update 🚀).
+- 🎶 Favoriting Songs Users can save songs to a favorites list
+- 🌙 Dark Mode & Light Mode Toggle between themes for better UX
+- 🎛️ Custom Playlists Users can create personalized playlists
+- 🎤 Lyrics Integration Display song lyrics for users to read while listening
+- 📆 Timeline for Reaching MVP in 1 Week
 
----
+## Day Tasks
 
-### 📆 Timeline for Reaching MVP in 1 Week
+- Day 1 (Setup & Planning) Create GitHub repo, initialize React (Vite), install dependencies, design UI wireframes
+- Day 2 (Basic Functionality) Implement homepage (/) with mood selection, integrate OpenAI API for mood analysis
+- Day 3 (Music API Integration) Fetch Last.fm + Deezer data, render top tracks on /results page
+- Day 4 (Enhancements & Testing) Implement song details page, allow users to play previews, add styling
+- Day 5 (Final Features & Deployment) Fix bugs, optimize UI, deploy to Netlify/Vercel
 
-**Day 1 (Planning & Setup)**
+## 🔥 Why VibeSync?
 
-- Create project repository & initialize React
-- Setup API keys for Last.fm & Deezer
-- Design wireframes for UI
-
-**Day 2 (Basic Functionality)**
-
-- Implement homepage (/) with mood selection
-- Fetch and display mood-based songs from Last.fm API
-- Implement /results page
-
-**Day 3 (MVP Completion & Testing)**
-
-- Implement /song/:id page with song preview
-- Test API integration and UI responsiveness
-- Ensure smooth navigation using React Router
-
-**Day 4 (Improvements & Features)**
-
-- Add search functionality for users to find specific songs
-- Style UI with CSS & animations
-- Add error handling for API failures
-
-**Day 5 (Final Testing & Deployment)**
-
-- Test user experience & fix bugs
-- Deploy
+- ✅ AI-Powered Recommendations: Uses machine learning to match moods with music genres
+- ✅ Multi-API Integration: Fetches music from multiple sources for best recommendations
+- ✅ Embedded Audio Previews: Users can listen without switching apps
+- ✅ Modern UI/UX: Clean, responsive React + Vite design

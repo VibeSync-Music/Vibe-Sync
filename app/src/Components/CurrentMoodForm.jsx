@@ -15,19 +15,18 @@ const CurrentMoodForm = ({ setMood }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset>
-        <legend>How do you feel?</legend>
-        <input
-          type="text"
-          value={moodInput}
-          onChange={handleChange}
-          placeholder="Type your mood (e.g., 'Feeling nostalgic about summer')"
-        />
-        <button type="submit" disabled={!moodInput}>
-          🎵 Get Songs
-        </button>
-      </fieldset>
+    <form onSubmit={handleSubmit} className="mood-form">
+      <legend className="form-title">🧠 How Are You Feeling Today?</legend>
+      <input
+        type="text"
+        className="mood-input"
+        value={moodInput}
+        onChange={handleChange}
+        placeholder="e.g. Reflective, nostalgic about summer..."
+      />
+      <button type="submit" disabled={!moodInput} className="mood-submit">
+        🎵 Curate My Vibe
+      </button>
     </form>
   );
 };

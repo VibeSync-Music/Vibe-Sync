@@ -36,30 +36,51 @@ const TracksContainer = ({ mood }) => {
     fetchSongsByMood();
   }, [mood]);
 
-  return (
-    <div>
-      <h3>🎵 Your AI-Generated Mood Playlist</h3>
-      {error && <p style={{ color: "red" }}>⚠️ {error}</p>}
+  if (!tracks.length && !error) {
+    return (
+      <div className="track-list loading">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="track-card skeleton-card">
+            <div className="skeleton-image shimmer" />
+            <div className="skeleton-text shimmer short" />
+            <div className="skeleton-text shimmer long" />
+            <div className="skeleton-audio shimmer" />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
-      <ul>
+  return (
+    <div className="track-section">
+      <h3 className="section-title">🎵 Your AI-Generated Mood Playlist</h3>
+      {error && <p className="error">⚠️ {error}</p>}
+
+      <ul className="track-list">
         {tracks.map((track, index) => (
-          <li key={index}>
-            <p>
-              {track.title} - {track.artist}
+          <li key={index} className="track-card">
+            <img
+              src={track.image}
+              alt={`Album cover for ${track.title}`}
+              className="track-image"
+            />
+            <p className="track-title">
+              {track.title}
+              <span className="track-artist"> — {track.artist}</span>
             </p>
-            <img src={track.image} alt={track.title} />
             {track.preview ? (
-              <audio controls>
+              <audio controls className="track-audio">
                 <source src={track.preview} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
             ) : (
-              <p>🚫 No preview available</p>
+              <p className="no-preview">🚫 No preview available</p>
             )}
+
             <a href={track.url} target="_blank" rel="noopener noreferrer">
               Listen on Spotify
             </a>
-            <button onClick={() => addSong(track)}>save</button>
+            <button onClick={() => addSong(track)}>Save</button>
           </li>
         ))}
       </ul>
