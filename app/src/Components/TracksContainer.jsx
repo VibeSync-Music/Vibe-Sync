@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { analyzeMoodWithAI } from "../adapters/aiMoodAnalyzer";
 import { fetchTracksWithDeezerPreviews } from "../adapters/moodAdapter";
+import { getSongs, addSong } from "../adapters/localStorage";
 
 const TracksContainer = ({ mood }) => {
   const [tracks, setTracks] = useState([]);
   const [error, setError] = useState("");
-  const [playingTrack, setPlayingTrack] = useState(null);
 
   useEffect(() => {
     const fetchSongsByMood = async () => {
@@ -36,17 +36,6 @@ const TracksContainer = ({ mood }) => {
     fetchSongsByMood();
   }, [mood]);
 
-  // ✅ Handles track playback
-  // const handlePlayTrack = (track) => {
-  //   if (playingTrack && playingTrack.audio) {
-  //     playingTrack.audio.pause();
-  //   }
-
-  //   const newAudio = new Audio(track.preview);
-  //   newAudio.play();
-  //   setPlayingTrack({ ...track, audio: newAudio });
-  // };
-
   return (
     <div>
       <h3>🎵 Your AI-Generated Mood Playlist</h3>
@@ -70,7 +59,7 @@ const TracksContainer = ({ mood }) => {
             <a href={track.url} target="_blank" rel="noopener noreferrer">
               Listen on Spotify
             </a>
-            <button>Save</button>
+            <button onClick={() => addSong(track)}>save</button>
           </li>
         ))}
       </ul>

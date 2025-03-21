@@ -58,6 +58,7 @@ const fetchSpotifyTracks = async (searchTerm) => {
     preview: track.preview_url, //  Use Spotify preview if available
     image: track.album.images[1]?.url || track.album.images[0]?.url,
     url: track.external_urls.spotify,
+    id: track.id,
   }));
 };
 
