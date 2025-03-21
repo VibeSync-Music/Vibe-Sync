@@ -24,7 +24,7 @@ const App = () => {
       <footer className="site-footer">
         <p>
           © {new Date().getFullYear()} VibeSync. Curate your vibe. Sync your
-          soul. ✨
+          soul. 🔮
         </p>
       </footer>
     </div>

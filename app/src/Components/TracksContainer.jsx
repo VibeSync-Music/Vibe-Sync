@@ -36,16 +36,20 @@ const TracksContainer = ({ mood }) => {
     fetchSongsByMood();
   }, [mood]);
 
-  // ✅ Handles track playback
-  const handlePlayTrack = (track) => {
-    if (playingTrack && playingTrack.audio) {
-      playingTrack.audio.pause();
-    }
-
-    const newAudio = new Audio(track.preview);
-    newAudio.play();
-    setPlayingTrack({ ...track, audio: newAudio });
-  };
+  if (!tracks.length && !error) {
+    return (
+      <div className="track-list loading">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="track-card skeleton-card">
+            <div className="skeleton-image shimmer" />
+            <div className="skeleton-text shimmer short" />
+            <div className="skeleton-text shimmer long" />
+            <div className="skeleton-audio shimmer" />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="track-section">
