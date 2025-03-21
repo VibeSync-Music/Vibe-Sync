@@ -11,8 +11,8 @@ const getSpotifyAccessToken = async () => {
   if (spotifyAccessToken) return spotifyAccessToken; // ✅ Use stored token if available
 
   // Spotify API Authorization
-  const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-  const SPOTIFY_CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+  const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+  const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
 
   const tokenUrl = "https://accounts.spotify.com/api/token";
   const requestOptions = {

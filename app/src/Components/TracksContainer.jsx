@@ -37,15 +37,15 @@ const TracksContainer = ({ mood }) => {
   }, [mood]);
 
   // ✅ Handles track playback
-  const handlePlayTrack = (track) => {
-    if (playingTrack && playingTrack.audio) {
-      playingTrack.audio.pause();
-    }
+  // const handlePlayTrack = (track) => {
+  //   if (playingTrack && playingTrack.audio) {
+  //     playingTrack.audio.pause();
+  //   }
 
-    const newAudio = new Audio(track.preview);
-    newAudio.play();
-    setPlayingTrack({ ...track, audio: newAudio });
-  };
+  //   const newAudio = new Audio(track.preview);
+  //   newAudio.play();
+  //   setPlayingTrack({ ...track, audio: newAudio });
+  // };
 
   return (
     <div>
@@ -60,10 +60,17 @@ const TracksContainer = ({ mood }) => {
             </p>
             <img src={track.image} alt={track.title} />
             {track.preview ? (
-              <button onClick={() => handlePlayTrack(track)}>▶️ Play</button>
+              <audio controls>
+                <source src={track.preview} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
             ) : (
               <p>🚫 No preview available</p>
             )}
+            <a href={track.url} target="_blank" rel="noopener noreferrer">
+              Listen on Spotify
+            </a>
+            <button>Save</button>
           </li>
         ))}
       </ul>

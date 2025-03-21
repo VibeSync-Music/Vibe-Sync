@@ -1,15 +1,19 @@
 import { useState } from "react";
-import CurrentMoodForm from "./Components/CurrentMoodForm";
-import TracksContainer from "./Components/TracksContainer";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./Components/Navbar";
+import Home from "./routes/Home";
+import Favorites from "./routes/Favorites";
 import "./App.css";
 
 const App = () => {
   const [mood, setMood] = useState("");
   return (
     <div>
-      <CurrentMoodForm setMood={setMood} />
-      <br />
-      <TracksContainer mood={mood} /> {/* STYLE THIS TO BE A GRID */}
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/Favorites" element={<Favorites />} />
+      </Routes>
     </div>
   );
 };
