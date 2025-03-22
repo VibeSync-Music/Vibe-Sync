@@ -123,3 +123,41 @@ The application will include the following core features and routes:
 - ✅ Multi-API Integration: Fetches music from multiple sources for best recommendations
 - ✅ Embedded Audio Previews: Users can listen without switching apps
 - ✅ Modern UI/UX: Clean, responsive React + Vite design
+
+## 📜 Installation & Setup Instructions
+
+### **🔹 1️⃣ Clone the Repository**
+
+```sh
+git clone https://github.com/your-username/vibesync.git
+```
+
+cd vibesync
+
+### **🔹 2️⃣ Install Dependencies**
+
+```sh
+npm install
+```
+
+### **🔹 3️⃣ Create a .env File and Add API Keys**
+
+```sh
+VITE_OPENAI_API_KEY=your-api-key-here
+VITE_SPOTIFY_CLIENT_ID=your-client-id-here
+VITE_SPOTIFY_CLIENT_SECRET=your-client-secret-here
+```
+
+### **🔹 4️⃣ Start the Proxy Server (for Deezer API)**
+
+```sh
+npm run proxy
+```
+
+### **🔹 5️⃣ Run the App**
+
+```sh
+npm run dev
+```
+
+The app will be available at: http://localhost:5173/
