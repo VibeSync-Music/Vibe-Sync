@@ -1,22 +1,20 @@
-import { fetchData } from "./handleFetch"; // Import your fetch helper
+import fetchData from "./handleFetch";
 
-// Fetch tracks from your backend's /tracks/search route
+// Proxy to your own backend instead of direct Spotify/Deezer calls
+const BACKEND_BASE = ""; // leave empty if frontend and backend are same domain
+
+// 🔍 Call your backend's /tracks/search
 export const fetchTracksWithDeezerPreviews = async (searchTerm) => {
   if (!searchTerm) return [];
 
-  try {
-    const res = await fetch(
-      `/tracks/search?q=${encodeURIComponent(searchTerm)}`
-    );
+  const [tracks, error] = await fetchData(
+    `${BACKEND_BASE}/tracks/search?q=${encodeURIComponent(searchTerm)}`
+  );
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch tracks.");
-    }
-
-    const tracks = await res.json();
-    return tracks;
-  } catch (err) {
-    console.error("Error fetching tracks:", err);
+  if (error || !Array.isArray(tracks)) {
+    console.error("Error fetching tracks:", error);
     return [];
   }
+
+  return tracks;
 };

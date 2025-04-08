@@ -1,3 +1,5 @@
+import fetchData from "./handleFetch";
+
 const moodCache = new Map();
 let lastRequestTime = 0;
 
@@ -5,38 +7,28 @@ export const analyzeMoodWithAI = async (moodText) => {
   if (!moodText) return [];
 
   if (moodCache.has(moodText)) {
+    console.log("⚡ Using cached AI response...");
     return moodCache.get(moodText);
   }
 
   const now = Date.now();
   if (now - lastRequestTime < 2000) {
-    console.warn("⏳ Too many requests! Try again in a few seconds.");
+    console.warn("⏳ Too many requests! Waiting...");
     return [];
   }
-
   lastRequestTime = now;
 
-  try {
-    const res = await fetch("/analyze-mood", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ mood: moodText }),
-    });
+  const [data, error] = await fetchData("/analyze-mood", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mood: moodText }),
+  });
 
-    if (!res.ok) {
-      console.error("❌ Server error:", res.statusText);
-      return [];
-    }
-
-    const data = await res.json();
-    const genres = data.genres || [];
-
-    moodCache.set(moodText, genres);
-    return genres;
-  } catch (err) {
-    console.error("🚨 Network error:", err);
+  if (error || !data?.genres) {
+    console.error("Error from backend AI analyzer:", error);
     return [];
   }
+
+  moodCache.set(moodText, data.genres);
+  return data.genres;
 };
