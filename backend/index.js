@@ -71,6 +71,7 @@ app.post("/analyze-mood", async (req, res) => {
 --------------------------------------------- */
 app.get("/tracks/search", async (req, res) => {
   const query = req.query.q;
+  console.log(query);
   if (!query) return res.status(400).json({ error: "Missing search term" });
 
   // 🔐 Get Spotify Access Token
@@ -142,11 +143,9 @@ app.get("/tracks/search", async (req, res) => {
   res.json(updatedTracks.filter((track) => track.preview));
 });
 
-/* --------------------------------------------
-   📦 Catch-all route (For React Router SPA)
---------------------------------------------- */
+// 📦 Catch-all route (for React Router support on refresh)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(filepath, "index.html"));
+  res.sendFile("index.html", { root: filepath });
 });
 
 // 🚀 Start server
