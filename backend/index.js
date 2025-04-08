@@ -2,7 +2,8 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
-const fetch = require("node-fetch");
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 // 🔐 Load environment variables from .env
 dotenv.config();
