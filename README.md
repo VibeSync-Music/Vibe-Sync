@@ -26,13 +26,15 @@ Designed for music lovers who want to discover fresh, personalized music effortl
 
 ### 🌐 Web Preview
 
-![Vibe Sync Preview](https://user-images.githubusercontent.com/your-image-link-here)
+
+
+<img width="1438" alt="Image" src="https://github.com/user-attachments/assets/f8bd87a3-7aa0-4b63-a2d7-8774f0b01a53" />
 
 ---
 
 ### 🎥 Demo
 
-▶️ [Watch Full Demo](https://www.youtube.com/watch?v=tWeSkVwjfR4)
+▶️ [Watch Full Demo](https://youtu.be/36oDfmwrk-M)
 
 ---
 
