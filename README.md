@@ -26,7 +26,7 @@ Designed for music lovers who want to discover fresh, personalized music effortl
 
 ### 🌐 Web Preview
 
-
+<img width="1438" alt="Image" src="https://github.com/user-attachments/assets/f8bd87a3-7aa0-4b63-a2d7-8774f0b01a53" />
 
 ---
 
