@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Navbar from "./Components/Navbar";
 import { FavoritesPage } from "./pages/FavoritesPage";
-import CurrentMoodForm from "./components/CurrentMoodForm";
-import TracksContainer from "./components/TracksContainer";
+import CurrentMoodForm from "./Components/CurrentMoodForm";
+import TracksContainer from "./Components/TracksContainer";
 
 const App = () => {
   const [mood, setMood] = useState("");
