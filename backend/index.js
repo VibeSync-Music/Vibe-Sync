@@ -45,7 +45,7 @@ app.post("/analyze-mood", async (req, res) => {
 
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.VITE_OPENAI_API_KEY}`,
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
   };
 
   const [data, error] = await fetchData(
@@ -77,7 +77,7 @@ app.get("/tracks/search", async (req, res) => {
   // 🔐 Get Spotify Access Token
   const tokenBody = "grant_type=client_credentials";
   const base64Creds = Buffer.from(
-    `${process.env.VITE_SPOTIFY_CLIENT_ID}:${process.env.VITE_SPOTIFY_CLIENT_SECRET}`
+    `${process.env.POTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   ).toString("base64");
 
   const [tokenData, tokenErr] = await fetchData(
