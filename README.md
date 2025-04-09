@@ -55,6 +55,6 @@ Designed for music lovers who want to discover fresh, personalized music effortl
 
 **Luis Abreu**  
 - [LinkedIn](https://www.linkedin.com/in/luis-g-abreu/)  
-- [GitHub](https://github.com/luisabreu000)
+- [GitHub](https://github.com/LAbreu00)
 
 ---
