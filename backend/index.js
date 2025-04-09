@@ -77,7 +77,7 @@ app.get("/tracks/search", async (req, res) => {
   // 🔐 Get Spotify Access Token
   const tokenBody = "grant_type=client_credentials";
   const base64Creds = Buffer.from(
-    `${process.env.POTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   ).toString("base64");
 
   const [tokenData, tokenErr] = await fetchData(
@@ -144,7 +144,7 @@ app.get("/tracks/search", async (req, res) => {
 });
 
 // 📦 Catch-all route (for React Router support on refresh)
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile("index.html", { root: filepath });
 });
 
