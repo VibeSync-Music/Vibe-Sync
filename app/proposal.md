@@ -124,7 +124,7 @@ The application will include the following core features and routes:
 - ✅ Embedded Audio Previews: Users can listen without switching apps
 - ✅ Modern UI/UX: Clean, responsive React + Vite design
 
-## 📜 Installation & Setup Instructions
+## 📜 Installation & Setup Instructions ( If Running Locally )
 
 ### **🔹 1️⃣ Clone the Repository**
 
